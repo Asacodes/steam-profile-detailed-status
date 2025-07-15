@@ -1,9 +1,8 @@
-
 // ==UserScript==
 // @name         Steam Cookie Injector (JSON Input)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Ask for JSON input, inject Steam cookies, and reload
+// @version      1.1
+// @description  Inject Steam cookies from JSON, clear previous ones
 // @match        *://steamcommunity.com/*
 // @grant        none
 // ==/UserScript==
@@ -29,10 +28,14 @@
   });
   document.body.appendChild(button);
 
-  // On click, prompt for JSON input
+  // Helper to delete cookies (overwrite with past expiry)
+  function deleteCookie(name) {
+    document.cookie = `${name}=; domain=steamcommunity.com; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  }
+
+  // Prompt and handle cookie injection
   button.addEventListener('click', () => {
     const input = prompt('Paste Steam cookie JSON:\n\n{"sessionid":"...","steamLoginSecure":"..."}');
-
     if (!input) return;
 
     try {
@@ -42,12 +45,16 @@
         return;
       }
 
+      // First delete existing cookies
+      deleteCookie('sessionid');
+      deleteCookie('steamLoginSecure');
+
+      // Then inject new cookies
       document.cookie = `sessionid=${data.sessionid}; domain=steamcommunity.com; path=/`;
       document.cookie = `steamLoginSecure=${data.steamLoginSecure}; domain=steamcommunity.com; path=/`;
 
       alert("✅ Cookies injected. Reloading Steam...");
       location.reload();
-
     } catch (e) {
       alert("❌ Failed to parse JSON. Please double-check the format.");
     }

@@ -18,7 +18,7 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "Ju
 
 document.addEventListener('DOMContentLoaded', function() {
     // First prep miniprofile stuff. Do we have an API key?
-    let apiKey = localStorage.__doctormckay_apikey;
+    let apiKey = "43D7E9217C2D9065B1DB2DD1F1DE6B28";
     if (!apiKey || !apiKey.match || !apiKey.match(/[0-9A-F]{32}/)) {
         apiKey = null;
     }
@@ -141,18 +141,60 @@ function doSteamIDButton() {
 		}
 	}
 
+	function LS(key, value) {
+	localStorage.setItem(key, value)
+	}
+
+
+
+
 	var idDialog;
 	unsafeWindow.OpenSteamIdDialog = exportFunction(function() {
 		unsafeWindow.HideMenu('profile_action_dropdown_link', 'profile_action_dropdown');
 
 		var sid = new Modules.SteamID(unsafeWindow.g_rgProfileData.steamid);
+
+		localStorage.removeItem('imgAvatar')
+		localStorage.removeItem('imgFrame')
 		var html = '<div class="bb_h1">Click to copy</div>';
+
+		var imgList = document.querySelectorAll('.playerAvatarAutoSizeInner img');
+		var firstImgSrc = imgList[0] ? imgList[0].src : null;
+		var secondImgSrc = imgList[1] ? imgList[1].src : null;
+
+		let errorSecond;
+
+		if (secondImgSrc == null) {
+			html += '<p id="avatar">avatar:'+ firstImgSrc +'</p>';
+			LS('imgAvatar', firstImgSrc)
+
+		} else {
+			html += '<p id="avatarFrame">frame:'+ firstImgSrc +'</p>';
+			html += '<p id="avatar">avatar:'+ secondImgSrc +'</p>';
+
+			LS('imgAvatar', secondImgSrc)
+			LS('imgFrame', firstImgSrc)
+		}
+
+		LS('profileLink', location.href)
+
 		html += '<p><a href="javascript:CopyToClipboard(\'' + sid.getSteam2RenderedID() + '\')">' + sid.getSteam2RenderedID() + '</a></p>';
+
+		//html += '<p>frame: '+ $('.playerAvatarAutoSizeInner').find('img').attr('src') +'</p>';
+		// html += '<p>avatar:'+ $('.profile_avatar_frame').find('img').eq(0).attr('src')+'</p>';
+
+
+
 		html += '<p><a href="javascript:CopyToClipboard(\'' + sid.getSteam3RenderedID() + '\')">' + sid.getSteam3RenderedID() + '</a></p>';
 		html += '<p><a href="javascript:CopyToClipboard(\'' + sid.getSteamID64() + '\')">' + sid.getSteamID64() + '</a></p>';
 		html += '<p><a href="javascript:CopyToClipboard(\'https://steamcommunity.com/profiles/' + sid.getSteamID64() + '\')">https://steamcommunity.com/profiles/' + sid.getSteamID64() + '</a></p>';
 
+
+		LS('profileName', unsafeWindow.g_rgProfileData.personaname)
 		idDialog = unsafeWindow.ShowAlertDialog(unsafeWindow.g_rgProfileData.personaname + "'s SteamID", html, "Close");
+
+
+
 	}, unsafeWindow);
 
 	unsafeWindow.CopyToClipboard = exportFunction(function(text) {

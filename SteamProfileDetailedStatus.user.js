@@ -18,7 +18,7 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "Ju
 
 document.addEventListener('DOMContentLoaded', function() {
     // First prep miniprofile stuff. Do we have an API key?
-    let apiKey = "43D7E9217C2D9065B1DB2DD1F1DE6B28";
+    let apiKey = localStorage.__doctormckay_apikey;
     if (!apiKey || !apiKey.match || !apiKey.match(/[0-9A-F]{32}/)) {
         apiKey = null;
     }
